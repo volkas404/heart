@@ -98,13 +98,17 @@ class PokedexGUI:
         self.search_button2 = ttk.Button(tab3, text="Search", command=self.search_move)
         self.search_button2.pack(padx=5, pady=5)
         
+        self.type = ttk.Label(tab3, text="",font=helv36)
+        self.type.pack(pady=5)
+        self.damage_class = ttk.Label(tab3, text="",font=helv36)
+        self.damage_class.pack(pady=5)
         self.accuracy = ttk.Label(tab3, text="",font=helv36)
         self.accuracy.pack(pady=5)
         self.power = ttk.Label(tab3, text="",font=helv36)
         self.power.pack(pady=5)
         self.pp = ttk.Label(tab3, text="",font=helv36)
         self.pp.pack(pady=5)
-        self.effect = ttk.Label(tab3, text="",font=helv36)
+        self.effect = ttk.Label(tab3, text="",font=helv36,wraplength=400)
         self.effect.pack(pady=5)
 
     def get_move_list(self):
@@ -129,11 +133,18 @@ class PokedexGUI:
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
+            type = data["type"]["name"]
+            damage_class = data["damage_class"]["name"]
             accuracy = data["accuracy"]
             pp = data["pp"]
             power = data["power"]
-            effect= data["effect_entries"]["effect"]
+            effect = data["effect_entries"][0]["effect"]
+            self.type.config(text=f"Type: {type}")
+            self.damage_class.config(text=f"Damage class: {damage_class}")
             self.accuracy.config(text=f"Accuracy: {accuracy}")
+            self.pp.config(text=f"PP: {pp}")
+            self.power.config(text=f"Power: {power}")
+            self.effect.config(text=f"Effect: {effect}")
 
     def get_pokemon_list(self):
         url = "https://pokeapi.co/api/v2/pokemon?limit=1118"
